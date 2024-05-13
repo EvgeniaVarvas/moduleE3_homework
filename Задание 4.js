@@ -1,25 +1,67 @@
-/* Задание 4
+/*Задание 4.
 
-Напишите функцию, которая принимает два числа. 
-Каждую секунду необходимо выводить в консоль, начиная от первого и заканчивая вторым. Используйте setInterval.
-Например, пользователь ввёл числа 5 и 15. 
-Каждую секунду в консоль должно печататься число, начиная с 5 и заканчивая 15 (всего 11 чисел: 5 6 7 8 9 10 11 12 13 14 15).
-*/
+Реализовать следующее консольное приложение подобно примеру, который разбирался в видео. Реализуйте его на прототипах.
+
+Определить иерархию электроприборов. Включить некоторые в розетку. Посчитать потребляемую мощность. 
+
+Таких приборов должно быть, как минимум, два (например, настольная лампа и компьютер). Выбрав прибор, подумайте, какими свойствами он обладает.
+ */
 
 
-function printNumbers(start, end) {
-    let current = start;
-    const intervalId = setInterval(function() {
-        console.log(current);
-        if (current === end) {
-            clearInterval(intervalId);
-        } else {
-            current++;
-        }
-    }, 1000);
+function Appliance(name,power) {
+    this.name = name;
+    this.power = power;
+    this.pluggedIn = false;
 }
 
+Appliance.prototype.turnOn = function() {
+    this.pluggedIn = true;
+    console.log(`Прибор ${this.name} включен. Потребляемая мощность: ${this.power} Вт.`);
+};
 
-let start = parseInt(prompt("Введите начальное значение: "));
-let end = parseInt(prompt("Введите конечное значение: "));
-printNumbers(start, end);
+Appliance.prototype.turnOff = function() {
+    this.pluggedIn = false;
+    console.log(`Прибор ${this.name} выключен.`);
+};
+
+
+function DeskLamp(name, power, brightness) {
+    this.name = name;
+    this.power = power;
+    this.brightness = brightness;
+}
+DeskLamp.prototype = new Appliance();
+
+DeskLamp.prototype.adjustBrightness = function(brightness) {
+    this.brightness = brightness;
+    console.log(`${this.name} яркость: ${this.brightness}.`);
+};
+
+function Computer(name, power, cpu){
+    this.name = name;
+    this.power = power;
+    this.cpu = cpu;
+}
+Computer.prototype = new Appliance();
+
+Computer.prototype.runProgram = function(program) {
+    console.log(`${this.name} запускает программу: ${program}.`);
+};
+
+
+const lamp = new DeskLamp('Настольная лампа', 50, 'средняя');
+const computer = new Computer('Компьютер', 500, 'Intel Core i7');
+
+lamp.turnOn();
+computer.turnOn();
+
+computer.runProgram('VSCode');
+
+console.log(lamp);
+console.log(computer);
+
+lamp.turnOff();
+computer.turnOff();
+
+
+
